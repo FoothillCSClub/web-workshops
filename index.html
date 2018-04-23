@@ -1,0 +1,49 @@
+<html>
+<body onload="init();"><canvas id='canvas'></canvas></body>
+
+<script>
+function init() {
+  let canvas = document.querySelector('body > canvas');
+  canvas.width = 1000;
+  canvas.height = 1000;
+  console.log("Canvas Loaded.", canvas);
+
+  if (canvas.getContext) {
+    let c = canvas.getContext('2d');
+    console.log("Canvas Context Loaded.", c);
+    drawMyPath(c);
+    addListeners(canvas, c);
+  }
+}
+
+function drawMyPath(c) { 
+  c.beginPath();
+  c.moveTo(75, 50);
+  c.lineTo(100, 75);
+  c.lineTo(100, 25);
+  c.fill();
+}
+
+function getMousePos(canvas, e) {
+  var rect = canvas.getBoundingClientRect();
+  return {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top
+  };
+}
+
+function addListeners(canvas, c) {
+  canvas.addEventListener('mousemove', function(e) {
+    let pos = getMousePos(canvas, e);
+    c.lineTo(pos.x, pos.y);
+    c.stroke();
+  }); 
+}
+
+// document.body.addEventListner('load', function(e) {
+//   console.log("Hello!", e);
+//   init();
+// });
+
+</script>
+</html>
