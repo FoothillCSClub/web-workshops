@@ -1,9 +1,58 @@
 <html>
-<body onload="init();"><canvas id='canvas'></canvas></body>
+<body>
+
+
+<section id='main_text'>
+<p>
+  Tap, Click, or Press the arrow keys to draw a line! 
+  Shaking your phone, or pressing the "Clear" button, will clear the screen!
+</p>
+</section>
+
+<div id="etch_wrap">
+  <h1 id="etch_title">Sketchy-Etch</h1>
+  <canvas id='canvas'></canvas>
+  <br/>
+  <button onclick="clearCanvasScreen();">Clear Screen!</button>
+</div>
+
+
+<style>
+body {
+  text-align: center;
+}
+#etch_wrap {
+  background: #933;
+  padding: 1em 2em;
+  border-radius: 1em;
+  display: inline-block;
+  border: #000;
+  box-shadow: 0 0 0.5em 1px;
+  padding-top: 0;
+}
+#etch_title {
+  text-align: center;
+  color: white;
+  text-shadow: 0 0 1px 1px;
+}
+button {
+  text-align: center;
+  font-size: 200%;
+  margin-top: 0.1em;
+}
+canvas {
+  border: double 1px #888;
+  background: #FFF;
+  border-radius: 0.5em;
+}
+</style>
+
 
 <script>
+document.querySelector('body').addEventListener('onload', init(), false);
+
 function init() {
-  let canvas = document.querySelector('body > canvas');
+  let canvas = document.querySelector('#canvas');
   canvas.width = 1000;
   canvas.height = 1000;
   console.log("Canvas Loaded.", canvas);
@@ -32,18 +81,51 @@ function getMousePos(canvas, e) {
   };
 }
 
-function addListeners(canvas, c) {
-  canvas.addEventListener('mousemove', function(e) {
-    let pos = getMousePos(canvas, e);
-    c.lineTo(pos.x, pos.y);
-    c.stroke();
-  }); 
+function drawNextLine(canvas, c, e) {
+  let pos = getMousePos(canvas, e);
+  c.lineTo(pos.x, pos.y);
+  c.stroke();
 }
 
-// document.body.addEventListner('load', function(e) {
-//   console.log("Hello!", e);
-//   init();
-// });
+function addListeners(canvas, c) {
+  canvas.addEventListener('click', function(e) {  
+    drawNextLine(canvas, c, e);  
+  });
+}
+
+
+function clearCanvasScreen() {
+  let canvas = document.querySelector('#canvas');
+  let c = canvas.getContext('2d');
+  c.closePath();
+  c.fillStyle='#FFF'; 
+  c.fillRect(0,0,1000,1000);
+  c.beginPath();
+}
+
+// ---------------------------------------------------------------------------
+// BELOW THIS POINT IS EXTRA STUFF.
+
 
 </script>
+<script type="text/javascript" src="https://cdn.rawgit.com/alexgibson/shake.js/master/shake.js"></script>
+<script>  
+    //listen to shake event
+    var shakeEvent = new Shake({threshold: 15});
+    shakeEvent.start();
+    window.addEventListener('shake', function(){
+        alert("Shaked");
+        clearCanvasScreen();
+    }, false);
+
+    //stop listening
+    function stopShake(){
+        shakeEvent.stop();
+    }
+
+    //check if shake is supported or not.
+    if(!("ondevicemotion" in window)){alert("Not Supported");}
+</script>
+
+</body>
 </html>
