@@ -62,19 +62,12 @@ Give space for the Advanced People to go on.
 
 ## 3. Modular workshops 
 
-> Modular:
->
-> employing or involving a module or modules as the basis of design or construction.
-
-
-
-The modularity of the workshops somewhat mirrors the [Unix Philosophy](https://en.wikipedia.org/wiki/Unix_philosophy) modularity of programs.
 
 - Each workshop adds a tool to your toolkit.
 - These tools can be combined together to help realize a creation.
 
 
-Specifically, for our workshops:
+Example
 
 - Use the context of "A personal homepage" as the main project.
 - Relate things to the web.
