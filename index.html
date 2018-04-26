@@ -118,7 +118,7 @@ function clearCanvasScreen() {
     var shakeEvent = new Shake({threshold: 15});
     shakeEvent.start();
     window.addEventListener('shake', function(){
-        alert("Shaked");
+        // alert("Shaked");
         clearCanvasScreen();
     }, false);
 
@@ -128,7 +128,7 @@ function clearCanvasScreen() {
     }
 
     //check if shake is supported or not.
-    if(!("ondevicemotion" in window)){alert("Not Supported");}
+    // if(!("ondevicemotion" in window)){alert("Not Supported");}
 </script>
 
 </body>
