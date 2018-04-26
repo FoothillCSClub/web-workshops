@@ -8,12 +8,11 @@ or Mozilla Firefox.
 
 ## Some Commonly Used Editors
 
-Here are some some commonly used text editors, based on a [2017 survey from Stack Overflow Insights](https://insights.stackoverflow.com/survey/2017#technology-most-popular-developer-environments-by-occupation
-). 
+- Atom
+- Vim
+- notepad++ (windows)
 
-![](pics/0.PNG)
 
-https://insights.stackoverflow.com/survey/2017#technology-most-popular-developer-environments-by-occupation
 
 
 ## Google Chrome / Chromium
