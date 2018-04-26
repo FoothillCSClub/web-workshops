@@ -1,9 +1,12 @@
 # Example Workshop Template
 
+
+
 ## Create This!
 
 - This [*Paint Brush*] is great a making [*Paintings*]!
 - Easy project ideas (takes < 1 hour)
+
 
 ## Guide
 
@@ -33,3 +36,16 @@
 - stuff you're interested in (don't go in depth)
 - Challenge Problems
 - Technically challenging project ideas
+
+
+## *Links (optional)*
+
+- References
+- Links to Guides
+- further learning
+
+
+## *Background (optional)*
+
+- History of the thing.
+- Why it was created.
