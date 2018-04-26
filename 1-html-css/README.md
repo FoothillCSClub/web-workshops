@@ -35,11 +35,9 @@ as a boilerplate, or start from scratch.
 
 
 
-## Next Steps
+## Exercises
 
--   HTML5
--   images, captions
-
+TODO
 
 ## Advanced
 

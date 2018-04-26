@@ -18,16 +18,18 @@
 - Link: here's a finished example
 
 
-## Next Steps
+## Exercises
 
-- Next steps.
-- Here's what else you can do!
 - Try this!
 - Can you solve this?
-- Problems.
-- Exercises.
-- Fun Ideas.
-- etc.
+- Fun Project Ideas.
+
+
+## Next Steps
+
+- Here's what else you can do!
+- Where we are going next with all this.
+
 
 
 ## Advanced
@@ -38,14 +40,9 @@
 - Technically challenging project ideas
 
 
-## *Links (optional)*
+## Links
 
 - References
 - Links to Guides
 - further learning
 
-
-## *Background (optional)*
-
-- History of the thing.
-- Why it was created.
