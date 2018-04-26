@@ -35,7 +35,7 @@ separate window.  Which you can do by
 1. clicking on the menu in the upper-right corner of the screen
 2. changing the option "Undock into a separate window" 
 
-![](pics/4.PNG)
+![](pics/6.PNG)
 
 
 ### Source Editor
