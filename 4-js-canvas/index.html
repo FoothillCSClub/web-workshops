@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+
+
+<body>
+<canvas id='canvas'></canvas>
+
+<!-- Load the Canvas Script -->
+<script type="text/javascript" src="canvas.js"></script>
+
+<!-- Extra Code snippets to allow for shaking phone to clear the screen. -->
+<script type="text/javascript" src="https://cdn.rawgit.com/alexgibson/shake.js/master/shake.js"></script>
+<script>  
+    var shakeEvent = new Shake({threshold: 10});
+    shakeEvent.start();
+
+    window.addEventListener('shake', function(){
+      clearCanvasScreen();
+    }, false);
+
+    function stopShake(){
+      shakeEvent.stop();
+    }
+
+    //check if shake is supported or not.
+    // if(!("ondevicemotion" in window)){alert("Not Supported");}
+</script>
+
+
+
+
+</body>
+</html>

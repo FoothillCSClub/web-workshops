@@ -7,6 +7,8 @@
 -   Press Buttons!
 -   Touchscreens!
 -   Project: [Platform Game](http://eloquentjavascript.net/16_game.html)
+-   Be able to mess with DOM objects
+
 
 
 ## Guide
