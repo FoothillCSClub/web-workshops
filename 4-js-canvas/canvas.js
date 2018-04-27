@@ -40,8 +40,6 @@ function HandleTouch(e) {
 
 function DrawModeOn(e) {
   DRAWING_MODE = true;
-  let pos = getMousePos(e);
-  c.moveTo(pos.x, pos.y);
 }
 
 function DrawModeOff() {
@@ -52,14 +50,21 @@ function addListeners() {
   canvas.addEventListener('mousemove', HandleMouse);
   canvas.addEventListener('touchmove', HandleTouch);
 
-  // canvas.addEventListener('click', HandleMouse);
-  canvas.addEventListener('touchstart', DrawModeOn);
   canvas.addEventListener('touchstop', DrawModeOff);
-
-  canvas.addEventListener('mousedown', DrawModeOn);
   canvas.addEventListener('mouseup', DrawModeOff);
-
   window.addEventListener('resize', resizeCanvas);
+
+  canvas.addEventListener('touchstart', function(e) {
+    DrawModeOn(e);
+    let pos = getTouchPos(e)
+    c.moveTo(pos.x, pos.y);
+  });
+
+  canvas.addEventListener('mousedown', function(e) {
+    DrawModeOn(e);
+    let pos = getMousePos(e)
+    c.moveTo(pos.x, pos.y);
+  });
 }
 
 function clearCanvasScreen() {
