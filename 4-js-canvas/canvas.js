@@ -24,16 +24,18 @@ function HandleMouse(e) {
 }
 
 function HandleTouch(e) {
+  e.preventDefault();
   let pos = getTouchPos(e);
   c.lineTo(pos.x, pos.y);
   c.stroke();
 }
 
 function addListeners() {
-  canvas.addEventListener('mousemove', HandleMouse,);
+  canvas.addEventListener('mousemove', HandleMouse);
   canvas.addEventListener('click', HandleMouse);
-  canvas.addEventListener('touchstart', HandleTouch, false);
-  canvas.addEventListener('touchmove', HandleTouch, false);
+  canvas.addEventListener('touchstart', HandleTouch);
+  canvas.addEventListener('touchmove', HandleTouch);
+  window.addEventListener('resize', resizeCanvas);
 }
 
 function clearCanvasScreen() {
@@ -44,16 +46,19 @@ function clearCanvasScreen() {
 }
 
 // Fixes the size of the canvas so that it appears nicely on the page.
-let body =  document.querySelector('body');
-let w = window.getComputedStyle(body).getPropertyValue('width');
-let h = window.getComputedStyle(body).getPropertyValue('height');
-canvas.width = parseInt(w, 10);
-canvas.height = parseInt(h, 10);
+function resizeCanvas() {
+  let body =  document.querySelector('body');
+  let w = window.getComputedStyle(body).getPropertyValue('width');
+  let h = window.getComputedStyle(body).getPropertyValue('height');
+  canvas.width = parseInt(w, 10);
+  canvas.height = parseInt(h, 10);
+}
 
 // Start off the canvas path drawings, and add event listeners.
+resizeCanvas();
+addListeners();
 c.beginPath();
 c.stroke();
-addListeners();
 
 
 // ======================================================================
