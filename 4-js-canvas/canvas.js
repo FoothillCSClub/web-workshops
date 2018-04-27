@@ -1,6 +1,8 @@
 const canvas = document.querySelector('#canvas');
 const c = canvas.getContext('2d');
 
+let DRAWING_MODE = false;
+
 function resolveCanvasPos(clientX, clientY) {
   let rect = canvas.getBoundingClientRect();
   return {
@@ -17,24 +19,46 @@ function getTouchPos(e) {
   return resolveCanvasPos(e.touches[0].clientX, e.touches[0].clientY);
 }
 
+function drawLine(x, y) {
+  if (DRAWING_MODE === false) {
+    return;
+  }
+  c.lineTo(x, y);
+  c.stroke();
+}
+
 function HandleMouse(e) {
   let pos = getMousePos(e);
-  c.lineTo(pos.x, pos.y);
-  c.stroke();
+  drawLine(pos.x, pos.y);
 }
 
 function HandleTouch(e) {
   e.preventDefault();
   let pos = getTouchPos(e);
-  c.lineTo(pos.x, pos.y);
-  c.stroke();
+  drawLine(pos.x, pos.y);
+}
+
+function DrawModeOn(e) {
+  DRAWING_MODE = true;
+  let pos = getMousePos(e);
+  c.moveTo(pos.x, pos.y);
+}
+
+function DrawModeOff() {
+  DRAWING_MODE = false;
 }
 
 function addListeners() {
   canvas.addEventListener('mousemove', HandleMouse);
-  canvas.addEventListener('click', HandleMouse);
-  canvas.addEventListener('touchstart', HandleTouch);
   canvas.addEventListener('touchmove', HandleTouch);
+
+  // canvas.addEventListener('click', HandleMouse);
+  canvas.addEventListener('touchstart', DrawModeOn);
+  canvas.addEventListener('touchstop', DrawModeOff);
+
+  canvas.addEventListener('mousedown', DrawModeOn);
+  canvas.addEventListener('mouseup', DrawModeOff);
+
   window.addEventListener('resize', resizeCanvas);
 }
 
