@@ -2,7 +2,7 @@
 
 ## Workshop Files
 
--   [Text Editors](0-text-editors)
+-   [Resources and Text Editors](0-resources)
 
 -   [HTML & CSS](1-html-css)
  
