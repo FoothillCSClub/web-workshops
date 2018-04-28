@@ -1,8 +1,10 @@
 # Welcome to the Canvas!
 
+![](pics/neat.PNG)
+
 The Canvas is an HTML element that acts like a picture, but easily allows you to draw anything you want!  It works really well with drawing lines, shapes, animations, and is great for making things like games.
 
-* [Example of a Drawing Application](draw/index.html) that was made with only a canvas and some events!
+* [Example of a Drawing Application](https://foothillcsclub.github.io/workshops/canvas/draw/) that was made with only a canvas and some events!
 
 * [Example of an online usage of canvas](http://35.230.55.6/)
 
@@ -294,3 +296,7 @@ Here's what we have so far: **[3. Paths Example](3_paths/3.html)**
 Codepen: **[Drawing Shapes](https://codepen.io/fractalbach/pen/gzLZoQ?editors=0010#0)**
 
 Codepen: **[Mouse Events](https://codepen.io/fractalbach/pen/gzLZoQ?editors=1011)**
+
+
+
+
