@@ -1,16 +1,38 @@
 # Introduction to Javascript
 
-## Create This!
 
-- Add javascript to a webpage!
-- Project Idea: [Make a Robot](http://eloquentjavascript.net/07_robot.html)
+## Goals
+
+-   Understand what makes Javascript different than other languages
+-   Learn what the DOM (Document Object Model)
+-   Be able to use [codepen](codepen.io) to make a simple webpage
+-   Become empowered with the tools to **break** websites
+
 
 ## Guide
 
--   Add javascript to a webpage.
-    ~~~html
-    <script src="myscript.js"> </script>
-    ~~~
+In the HTML and CSS workshop, we learned about how to make a simple webpage using `<tags>`.
+
+Copy and paste this basic script into a [codepen](codepen.io):
+```
+<html>
+  <body>
+    <h1>Hello</h1>
+  </body>
+</html>
+```
+
+To add a script to the pen, we can insert javascript by using the `<script>` tag like this:
+```
+<script>
+function() helloWorld {
+
+}
+<script>
+```
+
+
+## Things to learn
 
 [Values](http://eloquentjavascript.net/01_values.html)
 
@@ -37,31 +59,25 @@
 
 -   Functions
 
-
 [Data](http://eloquentjavascript.net/04_data.html)
 
 -   Lists []
 -   Objects {}
 
 
-
 ## Exercises
 
-- Play around with javascript using the console.
-- Prompt();
-- Console.log();
+-   Play around with javascript using the console (PC: `ctrl`+`option`+`I` or Mac: `CMD`+`option`+`I` )
+-   Check out some of the codepen entries from the homepage.
+-   Start breaking and inspecting your favorite websites.
 
 
 ## Next Steps 
-
 
 -   Learn about how Javascript works with HTML through
     The [Document Object Model](http://eloquentjavascript.net/14_dom.html)
 
 -   Coming up next: [Events](http://eloquentjavascript.net/15_event.html)
-
-
-
 
 
 ## Advanced
@@ -89,13 +105,10 @@ Hardcore Mode:
 -   Project Idea: [Make your own Programming Language](http://eloquentjavascript.net/12_language.html).
 
 
-
 ## Links
 
 -   Highly recommend reading [Eloquent Javascript](http://eloquentjavascript.net/),
     which is accessible for beginners, and will **definitely** teach some of
     the supposedly "advanced" programmers a thing or two (or more).
 
--   In fact, I think we should use it as a guide.
-
--   Seriously.  
+-   Other than that, the MDN Mozilla documentation for Javascript(https://developer.mozilla.org/en-US/docs/Web/JavaScript) is really complete. They have guides for beginners to advanced.
