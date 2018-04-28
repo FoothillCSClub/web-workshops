@@ -1,0 +1,48 @@
+<html>
+<body>
+
+<canvas width='500' height='500' 
+  onmousedown="drawBox(event);">
+</canvas>
+
+<style>
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #CCF;
+}
+</style>
+
+
+<script>
+let canvas = document.querySelector('canvas');
+let c = canvas.getContext('2d');
+
+c.fillStyle = 'red';
+c.fillRect(10, 10, 200, 200);
+
+function drawBox(event) {
+  let x = event.x;
+  let y = event.y;
+  c.strokeStyle = 'orange'
+  c.strokeRect(x-5, y-5, 10, 10);
+  drawPlus(x, y, 10);
+}
+
+function drawPlus(centerX, centerY, sideLength) {
+  c.beginPath();
+  c.moveTo(centerX - sideLength/2, centerY);
+  c.lineTo(centerX + sideLength/2, centerY);
+  c.moveTo(centerX, centerY - sideLength/2);
+  c.lineTo(centerX, centerY + sideLength/2);
+  c.closePath();
+  c.stroke();
+}
+
+</script>
+
+
+
+</body>
+</html>

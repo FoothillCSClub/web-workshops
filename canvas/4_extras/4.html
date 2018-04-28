@@ -1,0 +1,141 @@
+<html>
+<body>
+
+<canvas width='500' height='500' 
+  onmousedown="updateTarget(event);">
+</canvas>
+
+<style>
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #CCF;
+}
+</style>
+
+
+<script>
+let canvas = document.querySelector('canvas');
+let c = canvas.getContext('2d');
+
+function drawPlus(centerX, centerY, sideLength) {
+  c.beginPath();
+  c.moveTo(centerX - sideLength/2, centerY);
+  c.lineTo(centerX + sideLength/2, centerY);
+  c.moveTo(centerX, centerY - sideLength/2);
+  c.lineTo(centerX, centerY + sideLength/2);
+  c.closePath();
+  c.stroke();
+}
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~
+// new stuff below here.
+
+// Goal: Make the red box follow the orange one.
+// 1. Add some new variables. 
+// 2. func updateTarget.
+// 3. eventListener updateTarget
+// 4. func drawTargetBox
+// 5. func mainLoop
+// 6. 
+
+
+let speed = 5;
+
+let savedX = canvas.width / 2;
+let savedY = canvas.height / 2;
+
+let targetX = 0;
+let targetY = 0;
+
+
+// updated version of drawBox
+function updateTarget(event) {
+  targetX  = event.x;
+  targetY = event.y;
+}
+
+function drawTargetBox(x, y) {
+  c.strokeStyle = 'blue'
+  c.strokeRect(x-5, y-5, 10, 10);
+  drawPlus(x, y, 10);
+}
+
+function moveBox() {
+  // move towards target along x-axis.
+  if (targetX > savedX) {
+    savedX += speed;
+  }
+  if (targetX < savedX) {
+    savedX -= speed;
+  }
+
+  // move towards target along y-axis.
+  if (targetY > savedY) {
+    savedY += speed;
+  }
+  if (targetY < savedY) {
+    savedY -= speed;
+  }  
+}
+
+
+function mainLoop() {
+  c.clearRect(0, 0, canvas.width, canvas.height);
+
+  // moveBox();
+  moveBoxEvenly();
+
+  // draws the red box.
+  c.fillStyle = 'red';
+  c.fillRect(savedX-25, savedY-25, 50, 50);
+
+  // draws the target box
+  drawTargetBox(targetX, targetY);
+
+  // Tells the browser to start again, when it's ready.
+  window.requestAnimationFrame(mainLoop);
+}
+
+// -------------------
+// NEXT STEPS
+// 1. func UnitVector
+//    CHALLENGE!
+//
+// 2. Create AlternativMotion() 
+//
+//
+function UnitVector(vec_x, vec_y) {
+  let length = Math.sqrt(
+    Math.pow(vec_x, 2) + Math.pow(vec_y, 2));
+  return {
+    x: vec_x / length,
+    y: vec_y / length
+  }
+}
+
+
+function moveBoxEvenly() {  
+  let vectorX = targetX - savedX;
+  let vectorY = targetY - savedY;
+  let ourMove = UnitVector(vectorX, vectorY);
+
+  if (Math.abs(vectorX) > 5) {
+    savedX += (speed * ourMove.x);
+  }
+  if (Math.abs(vectorY) > 5) {
+    savedY += (speed * ourMove.y);
+  }
+}
+
+
+
+mainLoop();
+
+</script>
+
+
+
+</body>
+</html>
