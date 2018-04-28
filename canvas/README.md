@@ -62,9 +62,6 @@ In the rest of this guide, all of the functions will use this context.
 -  [Basic Animations](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_animations)
 
 
-
-
-
 # References & Links
 
 -   The very helpful [*Eloquent Javascript*](http://eloquentjavascript.net)
