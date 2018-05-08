@@ -1,11 +1,3 @@
-# Coding Weekend 2018
+# Canvas
 
-## Workshop Files
-
--   [Resources and Text Editors](0-resources)
-
--   [HTML & CSS](1-html-css)
- 
--   [Intro to Javascript](2-js-events)
-
--   [Canvas and Events](canvas)
+https://github.com/FoothillCSClub/workshops/tree/master/canvas
