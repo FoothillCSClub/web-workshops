@@ -105,9 +105,15 @@ function mainLoop() {
 function adjustView(xin, yin) {
     let r1 = canvas.getBoundingClientRect();
 
-    let new_top = -yin + window.screen.height/2;
-    let new_left = -xin + window.screen.width/2;
-  
+//     let new_top = -yin + window.screen.height/2;
+//     let new_left = -xin + window.screen.width/2;
+
+ 
+    let new_left = -xin + document.documentElement.clientWidth/2;
+    let new_top = -yin + document.documentElement.clientHeight/2;
+//     canvas.style.top = new_top + 'px';
+//     canvas.style.left = new_left + 'px';    
+
     if (new_top < bounds.max_top) {
         canvas.style.top = new_top + 'px';    
     }
@@ -196,7 +202,7 @@ function getTouchPos(e) {
 //                       Stash spot for later ;)
 //                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-https://stackoverflow.com/questions/1484506/random-color-generator
+// https://stackoverflow.com/questions/1484506/random-color-generator
 function getRandomColor() {
   let letters = '0123456789ABCDEF';
   let color = '#';
@@ -207,12 +213,10 @@ function getRandomColor() {
 }
 
 let rando_list = [];
+let number_of_random_shapes = 300;
 
 function drawTrees() {
-    for (let i=0; i<100; i++) {
-//       if (!rando_list[i]) {
-//         return;
-//       }
+    for (let i=0; i<number_of_random_shapes; i++) {
       c.fillStyle = rando_list[i].color;
       c.fillRect(
         rando_list[i].x, 
@@ -226,8 +230,7 @@ function drawTrees() {
 // // INitialize the epic arrays
 // // Draw random stuff everywhere so there are reference points.
 function initTrees() {
-    for (let i=0; i<100; i++) {
-
+    for (let i=0; i<number_of_random_shapes; i++) {
         rando_list.push ({
           x: Math.floor(bounds.max.x * Math.random()),
           y: Math.floor(bounds.max.y * Math.random()),
