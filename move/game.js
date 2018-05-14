@@ -65,19 +65,61 @@ function drawTargetBox(x, y) {
 }
 
 function moveBox() {
-    // move towards target along x-axis.
-    if ((targetX - savedX) > 5) {
-        savedX += speed;
-    }
-    if ((targetX - savedX) < 5) {
-        savedX -= speed;
-    }
+
+    cat_is_walking = false;
+    let temp_facing = [];
     // move towards target along y-axis.
     if ((targetY - savedY) > 5) {
         savedY += speed;
+        temp_facing.push("s");
     }
-    if ((targetY - savedY) < 5) {
+    if ((targetY - savedY) < -5) {
         savedY -= speed;
+        temp_facing.push("n");
+    }
+    // move towards target along x-axis.
+    if ((targetX - savedX) > 5) {
+        savedX += speed;
+        temp_facing.push("e");
+    }
+    if ((targetX - savedX) < -5) {
+        savedX -= speed;
+        temp_facing.push("w");
+    }
+
+    // If the cat is moving, save that state.
+    if (temp_facing.length >= 1) {
+      cat_is_walking = true;  
+    }
+    
+
+    // Decide if you need to change directions of the cat,
+    // and what direction to change it to.
+    let changed_direction = false;
+    // either north or south, can't be both.
+    if (temp_facing.includes("n")) {
+      cat_is_facing = "n";
+      changed_direction = true;
+    } else if (temp_facing.includes("s")) {
+      cat_is_facing = "s";
+      changed_direction = true;
+    }
+    // either east or west, can't be both.
+    // If we already changed directions to North/South
+    // then add an additional direction for East/West.
+    // Otherwise, we are facing absolute East/West.
+    if (temp_facing.includes("w")) {
+      if (changed_direction) {
+        cat_is_facing += "w";
+      } else {
+        cat_is_facing = "w";
+      }
+    } else if (temp_facing.includes("e")) {
+      if (changed_direction) {
+        cat_is_facing += "e";  
+      } else {
+        cat_is_facing = "e";
+      }
     }
 }
 
@@ -86,16 +128,35 @@ let move_counter = 0;
 
 function mainLoop() {
     c.clearRect(0, 0, canvas.width, canvas.height);
-    drawTrees();
+    drawShapes();
     moveBox();
     adjustView(savedX, savedY);    
 
-    // draws the red box.
-    c.fillStyle = 'red';
-    c.fillRect(savedX - 25, savedY - 25, 50, 50);
-
     // draws the target box
     drawTargetBox(targetX, targetY);
+
+    // draws the red box.
+    //c.fillStyle = 'red';
+    //c.fillRect(savedX - 25, savedY - 25, 50, 50);
+
+    // Determines which cat animation to use and 
+    // allows it to appear like it's walking.
+    if (cat_is_walking) {
+      cat_walk_counter++;  
+    }
+    if (cat_walk_counter > 29) {
+      cat_walk_counter = 0;
+    }
+    
+    // Get the set of animations based on direction 
+    cur_anim_array = cat_ANIM[cat_is_facing];
+
+    // Change the current cat animation to something else. 
+    current_cat_anim = cur_anim_array[Math.floor(cat_walk_counter/10)];
+
+    // Draws the cat picture.
+    drawCat(c, savedX-(cat_size_w/2), savedY-(cat_size_h/2));
+
 
     // Tells the browser to start again, when it's ready.
     window.requestAnimationFrame(mainLoop);
@@ -131,26 +192,26 @@ function adjustView(xin, yin) {
 // 2. Create AlternativMotion()
 //
 //
-function UnitVector(vec_x, vec_y) {
-    let length = Math.sqrt(Math.pow(vec_x, 2) + Math.pow(vec_y, 2));
-    return {
-        x: vec_x / length,
-        y: vec_y / length
-    }
-}
+// function UnitVector(vec_x, vec_y) {
+//     let length = Math.sqrt(Math.pow(vec_x, 2) + Math.pow(vec_y, 2));
+//     return {
+//         x: vec_x / length,
+//         y: vec_y / length
+//     }
+// }
 
-function moveBoxEvenly() {
-    let vectorX = targetX - savedX;
-    let vectorY = targetY - savedY;
-    let ourMove = UnitVector(vectorX, vectorY);
-
-    if (Math.abs(vectorX) > 5) {
-        savedX += (speed * ourMove.x);
-    }
-    if (Math.abs(vectorY) > 5) {
-        savedY += (speed * ourMove.y);
-    }
-}
+// function moveBoxEvenly() {
+//     let vectorX = targetX - savedX;
+//     let vectorY = targetY - savedY;
+//     let ourMove = UnitVector(vectorX, vectorY);
+    
+//     if (Math.abs(vectorY) > 5) {
+//         savedY += (speed * ourMove.y);
+//     }
+//     if (Math.abs(vectorX) > 5) {
+//         savedX += (speed * ourMove.x);
+//     }
+// }
 
 // Fixes the size of the canvas so that it appears nicely on the page.
 function resizeCanvas() {
@@ -198,10 +259,6 @@ function getTouchPos(e) {
 
 
 
-// ===========================================================
-//                       Stash spot for later ;)
-//                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 // https://stackoverflow.com/questions/1484506/random-color-generator
 function getRandomColor() {
   let letters = '0123456789ABCDEF';
@@ -215,31 +272,85 @@ function getRandomColor() {
 let rando_list = [];
 let number_of_random_shapes = 300;
 
-function drawTrees() {
+function drawShapes() {
     for (let i=0; i<number_of_random_shapes; i++) {
       c.fillStyle = rando_list[i].color;
       c.fillRect(
         rando_list[i].x, 
         rando_list[i].y, 
-        rando_list[i].w, 
-        rando_list[i].h
+        rando_list[i].w,
+        rando_list[i].h,
+        rando_list[i].v, 
       );
     }
 }
 
 // // INitialize the epic arrays
 // // Draw random stuff everywhere so there are reference points.
-function initTrees() {
+function initShapes() {
     for (let i=0; i<number_of_random_shapes; i++) {
         rando_list.push ({
           x: Math.floor(bounds.max.x * Math.random()),
           y: Math.floor(bounds.max.y * Math.random()),
           w: Math.floor(20* Math.random()),
           h: Math.floor(20* Math.random()),
+          v: Math.floor(10* Math.random()),
           color: getRandomColor(),
         });
     }
-    console.log(rando_list);
+//     console.log(rando_list);
 }
-initTrees();
+initShapes();
 // ===========================================================
+
+
+
+
+let catImage = new Image();
+catImage.src = "img/cats.png";
+let cat_size_w = 85;
+let cat_size_h = 87;
+let cat_walk_counter = 0;
+let cat_is_walking = false;
+let cat_is_facing = "s";
+let cat_ANIM_down = [
+  {nx: 0, ny: 0}, {nx: 1, ny: 0}, {nx:2, ny:0}
+]
+let cat_ANIM = {
+  s: [{nx: 0, ny: 0}, {nx: 1, ny: 0}, {nx:2, ny:0}],
+  w: [{nx: 0, ny: 1}, {nx: 1, ny: 1}, {nx:2, ny:1}],
+  e: [{nx: 0, ny: 2}, {nx: 1, ny: 2}, {nx:2, ny:2}],
+  n: [{nx: 0, ny: 3}, {nx: 1, ny: 3}, {nx:2, ny:3}],
+  sw: [{nx: 3, ny: 0}, {nx: 4, ny: 0}, {nx:5, ny:0}],
+  nw: [{nx: 3, ny: 1}, {nx: 4, ny: 1}, {nx:5, ny:1}],
+  se: [{nx: 3, ny: 2}, {nx: 4, ny: 2}, {nx:5, ny:2}],
+  ne: [{nx: 3, ny: 3}, {nx: 4, ny: 3}, {nx:5, ny:3}],
+}
+let current_cat_anim = {
+  nx: 0, 
+  ny: 0,
+};
+
+function getCatAnimArray(direction) {
+  switch (direction) {
+    case "s": return cat_ANIM.s;
+    case "n": return cat_ANIM.n;
+    case "w": return cat_ANIM.w;
+    case "e": return cat_ANIM.e;
+  }
+}
+
+function drawCat(c, x, y) {
+  let cat = getCat(current_cat_anim);
+  c.drawImage(catImage, cat.sx, cat.sy, cat.sw, cat.sh, x, y, cat.sw, cat.sh);
+}
+
+// 0, 0 = first image
+function getCat(cat_anim) {
+  return {
+    sx: cat_size_w * cat_anim.nx,
+    sy: cat_size_h * cat_anim.ny,
+    sw: cat_size_w,
+    sh: cat_size_h,
+  }
+}
