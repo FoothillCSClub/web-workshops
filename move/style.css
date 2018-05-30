@@ -1,10 +1,17 @@
 canvas {
   position: absolute;
-  background: #CCF;
+  background: transparent;
+  z-index: 11
 }
 
 body {
     background: #933;
+}
+img {
+    z-index: 10;
+    user-select: none;
+}
+body, img {
     overflow: hidden;
     position: fixed;
     top: 0;
@@ -12,6 +19,7 @@ body {
     right: 0;
     bottom: 0;
 }
+
 
 /*
 canvas {
