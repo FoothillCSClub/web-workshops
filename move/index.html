@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Move around!</title>
+<title>Cat Adventure!</title>
+<meta name="description" content="Go on an adventure... as a cat!">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="manifest" type="application/manifest+json" href="manifest.json">
@@ -9,16 +10,69 @@
 
 
 
-<body onload="startGame();" >
+<body onload="TheGame.Start();" >
 
-<canvas id='canvas' width="4476" height="3128"></canvas>
-<img id='TheMap' src="img/the_map.png" />
+<div id='loading_text'>The Cat Adventure game is loading!</div>
+<canvas id='canvas_background'></canvas>
+<canvas id='canvas_cat' width="85" height="87"></canvas>
 
+<table class="tg">
+  <tr>
+    <th>Debug Variable</th>
+    <th>Value</th>
+  </tr>
+  <tr>
+    <td id="">cat (actual)</th>
+    <td id="debug_cat_actual">0</th>
+  </tr>
+  <tr>
+    <td id="">target (actual)</td>
+    <td id="debug_target_actual">0</td>
+  </tr>
+  <tr>
+    <td id="">cat (game)</td>
+    <td id="debug_cat_game">0</td>
+  </tr>
+  <tr>
+    <td id="">target (game)</td>
+    <td id="debug_target_game">0</td>
+  </tr>
+  <tr>
+    <td id="">in Left Zone</td>
+    <td id="debug_zone_left">false</td>
+  </tr>
+  <tr>
+    <td id="">in Right Zone</td>
+    <td id="debug_zone_right">false</td>
+  </tr>
+  <tr>
+    <td id="">in Top Zone</td>
+    <td id="debug_zone_top">false</td>
+  </tr>
+  <tr>
+    <td id="">in Bottom Zone</td>
+    <td id="debug_zone_bottom">false</td>
+  </tr>
+  <tr>
+    <td id="">Facing Direction</td>
+    <td id="debug_cat_direction">?</td>
+  </tr>
+  <tr>
+    <td id="">Cat Animation Index</td>
+    <td id="debug_cat_anim_index">?</td>
+  </tr>
+  <tr>
+    <td id="">Is Cat Walking?</td>
+    <td id="debug_cat_is_walking">?</td>
+  </tr>
+</table>
 
-<!-- Load the Canvas Script -->
-<!-- <script type="text/javascript" src="canvas.js"></script> -->
-<script type="text/javascript" src="js/game.js" ></script>
+<script type="text/javascript" src="js/canvas_view.js"></script>
+<script type="text/javascript" src="js/canvas_drawing.js"></script>
+<script type="text/javascript" src="js/background.js"></script>
+<script type="text/javascript" src="js/user_input.js"></script>
 <script type="text/javascript" src="js/cat.js" ></script>
+<script type="text/javascript" src="js/game.js" ></script>
 
 </body>
 </html>

@@ -1,78 +1,132 @@
-let canvas = document.querySelector('canvas');
-let TheMap = document.querySelector('#TheMap');
-// let original_map_height = TheMap.height;
-// let original_map_width = TheMap.width;
+const TheGame = (function() {
+"use strict";
+/*
+==========================================================================
+The Game
 
-// 2x expand the map (height is automatically stretched.)
-TheMap.width = 2 *TheMap.width;
-canvas.width = TheMap.width;
-canvas.height = TheMap.height;
+This is the final module to load, and controls the game loop, the 
+animation refresh rate, and combines all of the other modules to 
+make a playable game.  Ideally, all of the modules (other than this one)
+should be decoupled, and this will be the only one to depend on them.
 
+Dependencies
 
-let c = canvas.getContext('2d');
-let startGame = ()=>{
-    // resizeCanvas();
-    // drawWalls();
-    canvas.style.top = view_bounds.max_top + "px";
-    canvas.style.left = view_bounds.max_left + "px";
-    mainLoop();
+  index.html:  makes use of the elements in the HTML.
+  canvas_view: determines viewing area boundaries.
+  background:  draws and updates the background canvas.
+  cat:         cat canvas position and animation.
 
+==========================================================================
+*/
+
+const canvas_cat = document.querySelector('#canvas_cat');
+const context_cat = canvas_cat.getContext('2d');
+
+const canvas_background = document.querySelector('#canvas_background');
+const context_background = canvas_background.getContext('2d');
+
+const debug = {
+  cat_actual: document.querySelector('#debug_cat_actual'),
+  target_actual: document.querySelector('#debug_target_actual'),
+  cat_game: document.querySelector('#debug_cat_game'),
+  target_game: document.querySelector('#debug_target_game'),
+  zone_left: document.querySelector('#debug_zone_left'),
+  zone_right: document.querySelector('#debug_zone_right'),
+  zone_top: document.querySelector('#debug_zone_top'),
+  zone_bottom: document.querySelector('#debug_zone_bottom'),
+  debug_cat_direction: document.querySelector('#debug_cat_direction'),
+  debug_cat_anim_index: document.querySelector('#debug_cat_anim_index'),
 };
 
+const speed = 5;
 
-let speed = 5;
-
-let savedX = 200;
-let savedY = 200;
-let targetX = 200;
-let targetY = 200;
-let bounds = {
-    min: {
-      x: 0,
-      y: 0
-    },
-    max: {
-      x: TheMap.width,
-      y: TheMap.widht,
-    },
-    padding: 0,
+// the size of the total game area (in pixels).  Not neccesarily the same thing
+// as the size of the screen.  A subsection of this area will be visible.
+let logical_map_size = {
+  x: 4000,
+  y: 4000,
 }
-let view_bounds = () => {
+// where the cat is relative to the logical map.  (the game position)
+let logical_cat_pos = {
+  x: 200,
+  y: 200,
+}
+
+let screen_cat_pos = {
+  x: canvas_background.width / 2,
+  y: canvas_background.height / 2,
+}
+
+// the actual position on the screen where the cat is.
+// this is the center of the screen most of the time,
+// unless you are by the edges of the logical game map.
+let saved = {
+  x: 200,
+  y: 200,
+}
+// the last position, used to check if it is neccesary to move the DOM canvas element.
+let old_saved = {
+  x:0,
+  y:0,
+}
+
+// the actual position on the screen that was clicked.  This gets converted into
+// a logical game target position.
+let target = { 
+  x: 200,
+  y: 200,
+}
+// the logical target: the position on the game map that the cat moves to.
+let logical_target = {
+  x: 200,
+  y: 200,
+}
+
+let rect_upper_left_quad = function () {
   return {
-    max_top: bounds.padding,
-    max_left: bounds.padding,
-    min_top: -canvas.height + document.documentElement.clientHeight - bounds.padding,
-    min_left: -canvas.width + document.documentElement.clientWidth - bounds.padding,  
+    x0: 0,
+    y0: 0,
+    xf: canvas_background.width / 2,
+    yf: canvas_background.height / 2,
   }
 }
 
 
-function resolveCanvasPos(clientX, clientY) {
-    let rect = canvas.getBoundingClientRect();
-    return {
-        x: (clientX - rect.left) * (canvas.width / rect.width),
-        y: (clientY - rect.top) * (canvas.height / rect.height)
-    };
+// playerIn_____Boundary returns true/false depending where they
+// are in the LOGICAL game playing area.  This can be used to 
+// determine if the cat should move on the SCREEN when it moves 
+// through the GAME and approaches the borders.
+// 
+// These are functions because they use the size of the canvas itself,
+// which can change throughout game play (like when you resize screen).
+//
+function playerInUpperBoundary (y) {
+  if (y < (canvas_background.height / 2)) {
+    return true;
+  }
+  return false;
 }
 
-function getMousePos(event) {
-    return resolveCanvasPos(event.clientX, event.clientY);
+function playerInLowerBoundary (y) {
+  if (y > (logical_map_size - (canvas_background.height /2))) {
+    return true;
+  }
+  return false;
 }
 
-function getTouchPos(e) {
-    return resolveCanvasPos(e.touches[0].clientX, e.touches[0].clientY);
-}
+function playerInLeftBoundary (x) {
+  if (x < (canvas_background.width / 2)) {
+    return true;
+  }
+  return false;
+ }
 
-function drawPlus(centerX, centerY, sideLength) {
-    c.beginPath();
-    c.moveTo(centerX - sideLength / 2, centerY);
-    c.lineTo(centerX + sideLength / 2, centerY);
-    c.moveTo(centerX, centerY - sideLength / 2);
-    c.lineTo(centerX, centerY + sideLength / 2);
-    c.closePath();
-    c.stroke();
+function playerInRightBoundary (x) {
+  if (x > (logical_map_size - (canvas_background.width / 2))) {
+    return true;
+  }
+  return false;
 }
-
 
 // updated version of drawBox
 function updateTarget(event) {
@@ -80,129 +134,61 @@ function updateTarget(event) {
     targetY = event.y;        
 }
 
-function drawTargetBox(x, y) {
-    c.strokeStyle = 'black'
-    c.strokeRect(x - 5, y - 5, 10, 10);
-    drawPlus(x, y, 10);
-}
-
-function moveBox() {
-
-    cat_is_walking = false;
-    let temp_facing = [];
-    // move towards target along y-axis.
-    if ((targetY - savedY) > 5) {
-        savedY += speed;
-        temp_facing.push("s");
-    }
-    if ((targetY - savedY) < -5) {
-        savedY -= speed;
-        temp_facing.push("n");
-    }
-    // move towards target along x-axis.
-    if ((targetX - savedX) > 5) {
-        savedX += speed;
-        temp_facing.push("e");
-    }
-    if ((targetX - savedX) < -5) {
-        savedX -= speed;
-        temp_facing.push("w");
-    }
-
-    // If the cat is moving, save that state.
-    if (temp_facing.length >= 1) {
-      cat_is_walking = true;  
-    }
-    
-
-    // Decide if you need to change directions of the cat,
-    // and what direction to change it to.
-    let changed_direction = false;
-    // either north or south, can't be both.
-    if (temp_facing.includes("n")) {
-      cat_is_facing = "n";
-      changed_direction = true;
-    } else if (temp_facing.includes("s")) {
-      cat_is_facing = "s";
-      changed_direction = true;
-    }
-    // either east or west, can't be both.
-    // If we already changed directions to North/South
-    // then add an additional direction for East/West.
-    // Otherwise, we are facing absolute East/West.
-    if (temp_facing.includes("w")) {
-      if (changed_direction) {
-        cat_is_facing += "w";
-      } else {
-        cat_is_facing = "w";
-      }
-    } else if (temp_facing.includes("e")) {
-      if (changed_direction) {
-        cat_is_facing += "e";  
-      } else {
-        cat_is_facing = "e";
-      }
-    }
+function updateDebugText() {
+  debug.cat_actual.innerText = `${saved.x}, ${saved.y}`;
+  debug.target_actual.innerText = `${target.x}, ${target.y}`;
+  debug.cat_game.innerText = `${logical_cat_pos.x}, ${logical_cat_pos.y}`;
+  debug.target_game.innerText = `${logical_target.x}, ${logical_target.y}`;
+  debug.zone_left.innerText = `${playerInLeftBoundary(logical_cat_pos.x)}`;
+  debug.zone_right.innerText = `${playerInRightBoundary(logical_cat_pos.x)}`;
+  debug.zone_top.innerText = `${playerInUpperBoundary(logical_cat_pos.y)}`;
+  debug.zone_bottom.innerText = `${playerInLowerBoundary(logical_cat_pos.y)}`;
+  debug.debug_cat_direction.innerText = `${TheCat.get_facing_direction()}`
+  document.querySelector('#debug_cat_anim_index').innerText = `${TheCat.get_current_animation_array_index()}`
+  document.querySelector('#debug_cat_is_walking').innerText = `${TheCat.IsWalking()}`
 }
 
 
 let move_counter = 0;
+let cat_walk_counter = 0;
 
 function mainLoop() {
-    c.clearRect(0, 0, canvas.width, canvas.height);
-//     drawShapes();
-    moveBox();
-    adjustView(savedX, savedY);    
+    // Adjust the Canvas Viewing Area
+    canvas_view.MakeFullScreen(canvas_background);
 
     // draws the target box
-    drawTargetBox(targetX, targetY);
-
-    // draws the red box.
-    //c.fillStyle = 'red';
-    //c.fillRect(savedX - 25, savedY - 25, 50, 50);
-
-    // Determines which cat animation to use and 
-    // allows it to appear like it's walking.
-    if (cat_is_walking) {
-      cat_walk_counter++;  
-    }
-    if (cat_walk_counter > 29) {
-      cat_walk_counter = 0;
-    }
-    
-    // Get the set of animations based on direction 
-    cur_anim_array = cat_ANIM[cat_is_facing];
-
-    // Change the current cat animation to something else. 
-    current_cat_anim = cur_anim_array[Math.floor(cat_walk_counter/10)];
+    canvas_drawing.DrawTargetBox(context_background, target.x, target.y);
 
     // Draws the cat picture.
-    drawCat(c, savedX-(cat_size_w/2), savedY-(cat_size_h/2));
+    TheCat.Draw(context_cat);
 
+    // updates the position and facing direction of the cat.
+    saved = TheCat.UpdateCatPosition(saved, target, speed);
+
+    // UPDATES DEUBGGIN INFORMATION.
+    if ((saved.x !== old_saved.x) || (saved.y !== old_saved.y)) {
+      old_saved.x = saved.x;
+      old_saved.y = saved.y;
+      canvas_cat.style.left = (saved.x - (TheCat.size.w / 2)) + "px";
+      canvas_cat.style.top = (saved.y - (TheCat.size.h / 2)) + "px";
+      updateDebugText();
+    }
+    // Determines which cat animation to use and 
+    // allows it to appear like it's walking.
+    if (TheCat.IsWalking() === true) {
+      cat_walk_counter++;
+      if (cat_walk_counter > 10) {
+        TheCat.NextAnimation();
+        cat_walk_counter = 0;
+      }
+    }
 
     // Tells the browser to start again, when it's ready.
     window.requestAnimationFrame(mainLoop);
 }
 
 
-function adjustView(xin, yin) {
-    let r1 = canvas.getBoundingClientRect(); 
-    let new_left = -xin + document.documentElement.clientWidth/2;
-    let new_top = -yin + document.documentElement.clientHeight/2;
-    let vb = view_bounds();
-//     canvas.style.top = new_top + 'px';
-//     canvas.style.left = new_left + 'px';    
 
-    if ((new_top < vb.max_top) && (new_top > vb.min_top)) {
-        canvas.style.top = new_top + 'px';
-        TheMap.style.top = new_top + 'px';
-    }
-    if ((new_left < vb.max_left) && (new_left > vb.min_left)) {
-        canvas.style.left = new_left + 'px';
-        TheMap.style.left = new_left + 'px';
-    }
-    
-}
 
 // -------------------
 // NEXT STEPS
@@ -234,30 +220,9 @@ function adjustView(xin, yin) {
 // }
 
 // Fixes the size of the canvas so that it appears nicely on the page.
-function resizeCanvas() {
-    let body = document.querySelector('body');
-    let w = window.getComputedStyle(body).getPropertyValue('width');
-    let h = window.getComputedStyle(body).getPropertyValue('height');
-    canvas.width = parseInt(w, 10);
-    canvas.height = parseInt(h, 10);
-}
 
 
-canvas.addEventListener('mousedown', HandleMouse);
-canvas.addEventListener('touchstart', HandleTouch);
 
-function HandleMouse(e) {
-  let pos = getMousePos(e);
-  targetX = pos.x;
-  targetY = pos.y;
-}
-
-function HandleTouch(e) {
-  e.preventDefault();
-  let pos = getTouchPos(e);
-  targetX = pos.x;
-  targetY = pos.y;
-}
 
 
 function resolveCanvasPos(clientX, clientY) {
@@ -265,7 +230,7 @@ function resolveCanvasPos(clientX, clientY) {
   return {
     x: (clientX - rect.left) * (canvas.width / rect.width),
     y: (clientY - rect.top) * (canvas.height / rect.height)
-  };  
+  };
 }
 
 function getMousePos(event) {
@@ -278,19 +243,18 @@ function getTouchPos(e) {
 
 
 
-
 // https://stackoverflow.com/questions/1484506/random-color-generator
-function getRandomColor() {
-  let letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
+// function getRandomColor() {
+//   let letters = '0123456789ABCDEF';
+//   let color = '#';
+//   for (let i = 0; i < 6; i++) {
+//     color += letters[Math.floor(Math.random() * 16)];
+//   }
+//   return color;
+// }
 
-let rando_list = [];
-let number_of_random_shapes = 300;
+// let rando_list = [];
+// let number_of_random_shapes = 300;
 
 // function drawShapes() {
 //     for (let i=0; i<number_of_random_shapes; i++) {
@@ -324,13 +288,37 @@ let number_of_random_shapes = 300;
 
 
 
-// Draw the background.
-// width="4476" height="3128"
-// let background_image_width = 4476;
-// let background_image_height = 3128;
-// let background_image = new Image();
-// background_image.src = "img/the_map.png";
-// c.drawImage(background_image, 0, 0);
+function AddListeners (canvas) {
+  canvas.addEventListener('mousedown', HandleMouse);
+  canvas.addEventListener('touchstart', HandleTouch);
+}
+
+function HandleMouse(e) {
+  let pos = user_input.getMousePos(canvas_background, e);
+  target.x = pos.x;
+  target.y = pos.y;
+}
+
+function HandleTouch(e) {
+  e.preventDefault();
+  let pos = user_input.getTouchPos(canvas_background, e);
+  targetX = pos.x;
+  targetY = pos.y;
+}
+
+
 // ===========================================================
 
 
+return {
+  Start: () => {
+    canvas_view.MakeFullScreen(canvas_background);
+    AddListeners(canvas_background);
+    mainLoop();
+  },
+
+  updateDebugText: updateDebugText,
+}
+
+/* ===================================================================== */
+}()); // end of namespace.
