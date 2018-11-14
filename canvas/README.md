@@ -4,11 +4,6 @@
 
 The Canvas is an HTML element that acts like a picture, but easily allows you to draw anything you want!  It works really well with drawing lines, shapes, animations, and is great for making things like games.
 
-* [Example of a Drawing Application](https://foothillcsclub.github.io/workshops/canvas/draw/) that was made with only a canvas and some events!
-
-* [Example of an online usage of canvas](http://35.230.55.6/)
-
-
 
 ## Overview
 
@@ -20,7 +15,7 @@ The Canvas is an HTML element that acts like a picture, but easily allows you to
 
 - [Next Steps](#next-steps)
 - [Advanced Topics](#advanced-topics)
-- [References and Links](#references-links)
+- [References and Links](#references-and-links)
 
 
 # 1. Getting Started
@@ -180,6 +175,8 @@ Let's say we want something more interesting than a rectangle in our drawBox fun
 ![picture of a plus sign inside a square](pics/plusBox.PNG)
     
 Create a new function called drawPlus. Most likely, we will want parameters for the location of the center, and the length of the box.
+
+**Try it!  Replace the '?'s with numbers to draw the plus**
 ~~~js
 function drawPlus(centerX, centerY, sideLength) {
     c.beginPath();
@@ -195,11 +192,10 @@ function drawPlus(centerX, centerY, sideLength) {
 }
 ~~~
 
-**Can you figure out what the question marks should be?**
 
-Here are some definitions for each of the functions we are using:
+Here are some of the path-drawing functions and a metaphor for what they do:
 
-* `beginPath()` grabs a pencil and sets it onto the page.
+* `beginPath()` puts the point of a pencil onto the page, ready to draw a line.
 
 * `moveTo(x, y)` acts like you are picking up the pencil, and placing it back down at the (x,y) location.
 
@@ -275,7 +271,7 @@ Here's what we have so far: **[3. Paths Example](3_paths/3.html)**
 
 
 
-# References & Links
+# References and Links
 
 -   The very helpful [*Eloquent Javascript*](http://eloquentjavascript.net)
     has a chapter called [Drawing on Canvas](http://eloquentjavascript.net/17_canvas.html),
