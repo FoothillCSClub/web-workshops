@@ -48,7 +48,7 @@ You can change it to anything you want.
 </canvas>
 ~~~
 
-next, add **CSS** to your canavs.  For now, let's draw a border
+Next, add **CSS** to your canvas.  For now, let's draw a border
 around the canvas area, and place it in the upper-left corner of the screen.
 
 ~~~css
@@ -68,7 +68,7 @@ corner of the screen.
 
 ## Canvas Context
 
-Now we get to the **Javascript**. Start using the canvas by getting it's context.
+Now we get to the **JavaScript**. Start using the canvas by getting its context.
 Add these lines to your script:
 ~~~js
 let canvas = document.querySelector('canvas');
@@ -139,7 +139,7 @@ Here are some of the properties we often are interested in:
 - `event.y` is the cursor's *y* position.
 
 
-Now Let's try drawing a box at the place you clicked!
+Now let's try drawing a box at the place you clicked!
 ~~~js
 function drawBox(event) {
   let x = event.x;
